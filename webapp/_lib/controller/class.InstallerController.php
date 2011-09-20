@@ -60,7 +60,12 @@ class InstallerController extends ThinkUpController {
         if (@$_GET['step'] != 'repair') {
             $this->checkForExistingInstallation();
         }
-
+        
+        if ( (!isset($_GET['step']) || $_GET['step'] == '1') && $this->installer->checkStep1()) {
+            $this->step2();
+            return $this->generateView();
+        }
+   
         //route user to the right step
         if (!isset($_GET['step']) || $_GET['step'] == '1') {
             $this->step1();

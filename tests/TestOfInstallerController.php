@@ -89,6 +89,37 @@ class TestOfInstallerController extends ThinkUpUnitTestCase {
         $this->assertPattern('/Your system has everything it needs to run ThinkUp./', $result);
         $this->restoreConfigFile();
     }
+    
+    public function testFreshInstallStep1MissingDependencies() {
+        //remove config file
+        Config::destroyInstance();
+        $this->removeConfigFile();
+        //drop DB
+        $this->testdb_helper->drop($this->test_database_name);
+        // Create an array of dependencies with some missing
+        //$dep = array('curl'=>false, 'gd'=>false, 'pdo'=>true, 'pdo_mysql'=>true, 'json'=>false, 'hash'=>false,
+       // 'simplexml'=>false); 
+        
+        $controller = new InstallerController(true);
+        $this->assertTrue(isset($controller));
+        $result = $controller->go();
+        $this->assertPattern('/Your system has everything it needs to run ThinkUp./', $result);
+        $this->restoreConfigFile();
+    }
+    
+    public function testFreshInstallStep1AllDependencies() {
+        //remove config file
+        Config::destroyInstance();
+        $this->removeConfigFile();
+        //drop DB
+        $this->testdb_helper->drop($this->test_database_name);
+
+        $controller = new InstallerController(true);
+        $this->assertTrue(isset($controller));
+        $result = $controller->go();
+        $this->assertPattern('/Your system has everything it needs to run ThinkUp./', $result);
+        $this->restoreConfigFile();
+    }
 
     public function testFreshInstallStep2() {
         //drop DB
